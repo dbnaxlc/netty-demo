@@ -17,7 +17,7 @@ public class MarshallingEncoder {
 		marshaller = MarshallingCodecFactory.buildMarshaller();
 	}
 	
-	protected void encode(Object msg, ByteBuf out) throws Exception {
+	public void encode(Object msg, ByteBuf out) throws Exception {
 		try {
 		    int lengthPos = out.writerIndex();
 		    out.writeBytes(LENGTH_PLACEHOLDER);
