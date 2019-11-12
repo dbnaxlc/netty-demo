@@ -16,6 +16,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 
 public class Client {
 	
@@ -32,7 +33,9 @@ public class Client {
 						ChannelPipeline p = ch.pipeline();
 						p.addLast(new NettyMessageDecoder(1024 * 1024, 4, 4));
 						p.addLast(new NettyMessageEncoder());
+						p.addLast(new IdleStateHandler(0, 2, 0));
 						p.addLast(new LoginAuthReqHandler());
+						p.addLast(new HeartBeatClientHandler());
 					}
 				});
 		try {

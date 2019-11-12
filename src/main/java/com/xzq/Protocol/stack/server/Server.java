@@ -14,6 +14,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 
 public class Server {
 
@@ -30,7 +31,9 @@ public class Server {
 					ChannelPipeline p = ch.pipeline();
 					p.addLast(new NettyMessageDecoder(1024 * 1024, 4, 4));
 					p.addLast(new NettyMessageEncoder());
+					p.addLast(new IdleStateHandler(3, 0, 0));
 					p.addLast(new LoginAuthRespHandler());
+					p.addLast(new HeartbeatServerHandler());
 				}
 			});
 			ChannelFuture future = bs.bind(8080).sync();
