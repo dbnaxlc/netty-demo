@@ -1,7 +1,11 @@
 package com.xzq.Protocol.stack.client;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.xzq.Protocol.stack.codec.NettyMessageDecoder;
 import com.xzq.Protocol.stack.codec.NettyMessageEncoder;
+import com.xzq.Protocol.stack.task.ClientTask;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -14,6 +18,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class Client {
+	
+	private static final ExecutorService es = Executors.newFixedThreadPool(10);
 	
 	public static void main(String[] args) {
 		EventLoopGroup worker = new NioEventLoopGroup();
@@ -31,10 +37,12 @@ public class Client {
 				});
 		try {
 			ChannelFuture future = bs.connect("127.0.0.1", 8080).sync();
+			es.execute(new ClientTask(future.channel()));
 			future.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			worker.shutdownGracefully();
 		}
 	}
 
+	
 }
