@@ -15,7 +15,7 @@ public class EchoClient {
 	public static void main(String[] args) {
 		EventLoopGroup worker = new NioEventLoopGroup();
 		Bootstrap bs = new Bootstrap();
-		bs.group(worker).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true)
+		bs.group(worker).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true).option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 2000)
 				.handler(new ChannelInitializer<SocketChannel>() {
 
 					@Override
